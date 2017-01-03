@@ -1,0 +1,187 @@
+import re
+
+fh=open(r'c:\python27\mine\network\showrun2800router.txt')
+fh.seek(0)
+Regex = re.compile(r'''
+    line\s+(vty|con)(.*)
+    ''',re.IGNORECASE | re.VERBOSE)
+
+result=Regex.findall(fh.read())
+print "Result " + str(result)
+dictmp={}
+dictmptot={}
+listtmp=[]
+if result:
+    for res in result:
+            #if res[3].startswith(args[0]):
+            print " line vty ccon " + res[0] + res[1] 
+            #dictmp.setdefault('type','none')
+            
+            dictmp['linename']=res[0]
+            dictmp['content']=res[1]
+            #dictmp['aclcontent']=res[2]
+            listtmp.append(dictmp)
+            dictmp={}
+            print "lstttmp " + str(listtmp)
+    
+    for var in listtmp:
+        dictmptot.setdefault(var['linename'],[])
+        dictmptot[var['linename']]=dictmptot[var['linename']] + [var]
+        #print 'dictmptot ' + str(dictmptot[var['linename']])
+        print 'hasil '+  var['linename'] + ' ' + var['content']
+    #dictmptot[res[0]]=listtmp
+    for key,value in dictmptot.items():
+        
+        #print 'akhir dictmptot acl number '+key + 'isisny ' + value['type'] + ' ' + value['aclcontent'])
+        #print 'akhir dictmptot acl number '+key + 'isisny ' + str(value)
+        for val in value: 
+            print 'akhir detail  dictmptot inspect name '+key + ' isisny ' + val['content']
+            
+                
+
+def testfunc(regexarg,listcol,regoption=0):
+	print "IN TESTFUNC "
+	fh=open(r'c:\python27\mine\network\showrun2800router.txt')
+	fh.seek(0)
+	#Regex = re.compile(r'''
+    #line\s+(vty|con)(.*)
+    #''',re.IGNORECASE | re.VERBOSE)
+
+	Regex = re.compile(regexarg,re.IGNORECASE | re.VERBOSE | regoption )
+
+	result=Regex.findall(fh.read())
+	print "Resultant " + str(result) + ' with type ' + str(type(result))
+	dictmp={}
+	dictmptot={}
+	listtmp=[]
+	for ikll in result:
+		print "lagi result " + str(ikll) + " with ikll 0 " + ikll[0]
+	
+	if result:
+		for res in list(result):
+		    
+			#print " line vty testfun ccon " + res[0] + res[1] 
+			print " line  testfun ccon " + str(res) + " with res0 " + res[0]
+			
+            #dictmp.setdefault('type','none')
+			cnt=0
+			for lst in listcol:
+				dictmp[lst]=res[cnt]
+				cnt=cnt+1
+
+			listtmp.append(dictmp)
+			dictmp={}
+			print "lstttmp " + str(listtmp)
+				
+	for var in listtmp:
+		dictmptot.setdefault(var[listcol[0]],[])
+   		dictmptot[var[listcol[0]]]=dictmptot[var[listcol[0]]] + [var]
+   		#print 'dictmptot ' + str(dictmptot[var['linename']])
+    	print 'hasil testfun '+  var[listcol[0]] 
+    	#dictmptot[res[0]]=listtmp
+    
+    
+	for key,value in dictmptot.items():
+        
+        #print 'akhir dictmptot acl number '+key + 'isisny ' + value['type'] + ' ' + value['aclcontent'])
+        #print 'akhir dictmptot acl number '+key + 'isisny ' + str(value)
+		for val in value:
+			for lst in listcol:
+				 print 'akhir '+ lst + " isinya " + val[lst],
+			print '\n'
+            
+            
+
+
+listcol=['linename','content']
+pattern=r'''
+    line\s+(vty|con|aux)(.*)
+    '''
+testfunc(pattern,listcol)
+
+print "IN FINDING ACL "
+pattern=r'''
+    access-list\s+(\d+)\s+(permit|remark|deny){1}(.*)
+   '''
+listcol=['aclno','type','aclcontent']
+
+testfunc(pattern,listcol)
+
+print "IN IP INSPECT "
+    
+pattern= r'''
+ ip\s+inspect\s+name\s+(\w+)(.*)
+    '''
+listcol=['inspect_name','content']
+#testfunc(pattern,listcol)
+
+print "IN SNMP"
+pattern='''
+    (snmp-\w+)\s+(community)\s+(public)(.*)
+    '''
+listcol=['snmp','community','comm_name','stringvar']
+testfunc(pattern,listcol)
+
+print "IN FINDING ROUTNG "
+#pattern=r'''
+#(router\s+eigrp\s+\d+)\s*
+# (network\s+.*)?\s*
+# (redistribute\s+.*)?\s*
+# (default-metric\s+.*)?\s*
+# '''
+
+#pattern=r'''
+#(router\s+eigrp\s+\d+)\s+(.*?)
+#(\!)
+#'''
+
+pattern=r'''
+(router\s+eigrp\s+\d+)\s+((.*\s+)*?)
+(\!)
+'''
+
+#listcol=['router','network','redistribute','defaultmetric']
+listcol=['router','router_entry']
+print "REescape " + re.escape('!')
+testfunc(pattern,listcol)
+ 
+
+
+
+
+fh=open(r'c:\python27\mine\network\showrun2800router.txt')
+fh.seek(0)
+Regex = re.compile(r'''
+    (snmp-\w+)\s+(community)\s+(public)(.*)
+    ''',re.IGNORECASE | re.VERBOSE)
+
+result=Regex.findall(fh.read())
+print "Resultsnmp " + str(result)
+dictmp={}
+dictmptot={}
+listtmp=[]
+if result:
+    for res in result:
+            #if res[3].startswith(args[0]):
+            print " snmp" + res[0] + res[1] 
+            #dictmp.setdefault('type','none')
+            
+            dictmp['snmp']=res[0]
+            dictmp['content']=res[1]
+            #dictmp['aclcontent']=res[2]
+            listtmp.append(dictmp)
+            dictmp={}
+            print "lstttmp " + str(listtmp)
+    
+    for var in listtmp:
+        dictmptot.setdefault(var['linename'],[])
+        dictmptot[var['']]=dictmptot[var['linename']] + [var]
+        #print 'dictmptot ' + str(dictmptot[var['linename']])
+        print 'hasil '+  var['linename'] + ' ' + var['content']
+    #dictmptot[res[0]]=listtmp
+    for key,value in dictmptot.items():
+        
+        #print 'akhir dictmptot acl number '+key + 'isisny ' + value['type'] + ' ' + value['aclcontent'])
+        #print 'akhir dictmptot acl number '+key + 'isisny ' + str(value)
+        for val in value: 
+            print 'akhir detail  dictmptot inspect name '+key + ' isisny ' + val['content']

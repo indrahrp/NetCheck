@@ -1,0 +1,311 @@
+import re
+from collections import OrderedDict
+def test_var_args(farg, *args):
+    print "formal arg:", farg
+    for arg in args:
+        print "another arg:", arg
+
+test_var_args(1, "two", 3)
+
+#ip address 192.168.9.1 255.255.255.0'''
+line='''interface fastethernet10/2/3
+ip address 192.168.9.1 255.255.255.0'''
+# interface GigabitEthernet1/0/16   interface FastEthernet0/5
+#Regex = re.compile(r'''
+#    interface\s+([Vlan|Gigabit|FastEthernet]){1}(\d+){1}?\s*ip address
+#   ip address (\d+\.\d+\.\d+\.\d+\s+\d+\.\d+\.\d+\.\d+)
+#   ''',re.IGNORECASE | re.VERBOSE|re.DOTALL)
+
+Regex = re.compile(r'''
+    interface\s?(Vlan|gigabitethernet|fastethernet)(\d+/?)+\s*
+#    ip address (\d+\.\d+\.\d+\.\d+\s+\d+\.\d+\.\d+\.\d+)
+ip\saddress\s+(\d+.\d+.\d+.\d+)\s*(\d+.\d+.\d+.\d+)?
+''',re.IGNORECASE | re.VERBOSE|re.DOTALL)
+
+result=Regex.search(line)
+print result.group()
+
+line="hostname fdaf"
+Regex = re.compile(r'''
+hostname\s+(\w+)
+''',re.IGNORECASE | re.VERBOSE|re.DOTALL)
+
+result=Regex.search(line)
+print result.group()
+
+fh=open(r'C:\Python27\mine\network\showrun2800router.txt')
+
+line="version 12.2"
+Regex = re.compile(r'''
+version\s+((\w+\W){0,3})
+''',re.IGNORECASE | re.VERBOSE|re.DOTALL)
+result=Regex.search(fh.read())
+print "version " +result.group(1)
+
+
+fh=open(r'C:\Python27\mine\network\showrun2800router.txt')
+
+line="version 12.2"
+Regex = re.compile(r'''
+ip\s+route\s+((\d+.\d+.\d+.\d+\s?)+)
+''',re.IGNORECASE | re.VERBOSE|re.DOTALL)
+result=Regex.findall(fh.read())
+print "findall result " + str(result)
+print "findall inside " + str(result[0])
+print "findall inside " + result[0][0]
+#print "static route " + result[0] 
+for res in result:
+	print "res " + res[1].strip()
+
+intlist=[]
+fh=open(r'C:\Python27\mine\network\showrun2800router.txt')
+
+#egex = re.compile(r'''
+#   interface\s?(Vlan|gigabitethernet|fastethernet)(\d+/?)+\s*
+#    ip address (\d+\.\d+\.\d+\.\d+\s+\d+\.\d+\.\d+\.\d+)
+#p\saddress\s+(\d+.\d+.\d+.\d+)\s*(\d+.\d+.\d+.\d+)?
+#'',re.IGNORECASE | re.VERBOSE|re.DOTALL)
+Regex = re.compile(r'''
+    (interface\s?)(Vlan|gigabitethernet|fastethernet)(\d+/?)+\s*
+    ip\saddress\s+(\d+.\d+.\d+.\d+)\s*(\d+.\d+.\d+.\d+)?
+    ''',re.IGNORECASE | re.VERBOSE|re.DOTALL)
+
+result=Regex.findall(fh.read())
+
+if result:
+	for res in result:
+            #if res[3].startswith(args[0]):
+            print "ipsfound " + res[0] + res[1]+str(res[2])
+            
+line="enable password cisco123"
+
+            
+Regex = re.compile(r'''
+enable\s+password\s+(.*)
+''',re.IGNORECASE | re.VERBOSE|re.DOTALL)
+
+result=Regex.search(line)
+print "result " + str(result.group(1))    
+
+line1="aaa new-model"
+
+Regex = re.compile(r'''
+aaa\s+(.*)
+''',re.IGNORECASE | re.VERBOSE|re.DOTALL)
+
+result=Regex.search(line1)
+print "result " + str(result.group(1)) 
+
+line="username jsomeone password 0 cg6#107X"
+Regex = re.compile(r'''
+aaa\s+(\w+)*
+''',re.IGNORECASE | re.VERBOSE|re.DOTALL)
+fh.seek(0)
+line=fh.read()
+#print "line read" + line
+result=Regex.search(line)
+print "result " + str(result.group(0)) 
+
+fname = "Joe"
+lname = "Who"
+age = "24"
+
+#Example of how to use the format() method:
+print "{} {} is {} years ".format(fname, lname, age)
+
+#Another really cool thing is that we don't have to provide the inputs in the same order, if we number the place-holders.
+print "{1} {0} is {2} years".format(fname, lname, age)
+fname="drain"
+lname="harap"
+print"first name {1} and last tname {0}".format(fname,lname)
+
+
+lst = ['abc-123', 'def-456', 'ghi-789', 'abc-456']
+print filter(lambda x: 'abc' in x, lst)
+prefix='192.168'
+
+lst1=[['interface ', 'FastEthernet', '0', '192.1.12.2', '255.255.255.0'], ['interface ', 'Vlan', '1', '192.168.1.1', '255.255.255.0']]
+for s in lst1:
+    #print ' sis ' + str(s)
+    lsttmp=filter((lambda x: prefix in x) , s)
+    print 'lsttmp ' +  str(lsttmp)
+    
+
+lst1=[['interface ', 'FastEthernet', '0', '192.1.12.2', '255.255.255.0'], ['interface ', 'Vlan', '1', '192.168.1.1', '255.255.255.0']]
+for s in lst1:
+    print ' sis ' + str(s)
+    lsttmp=filter((lambda x: prefix in x) , s)
+    if lsttmp:
+        for dev in lsttmp:
+            print 'with prefix ' + prefix + " sttmpyang bebnar  "+ s[0] +' ' + s[1] + ' ' + s[2] +' ' + lsttmp[0] +' ' + s[4] + ' '       
+
+lstmp1 = filter((lambda x: prefix in x) , lst1)
+for cnt in lstmp1:
+    print "cnt " +str(lstmp1)
+        
+x="abcde"
+a=lambda x:  'abc' in x
+print "lambda a " , a('dbcde')
+comp=[x + x  for x in range(5) if x%2==0]
+
+print comp 
+
+tup1=('0','3')
+print "tup 1 " + tup1[1]
+
+
+#access-list 101 remark This ACL is to control the outbound router traffic.
+#access-list 101 permit tcp 192.168.8.0 0.0.0.255 any eq 80
+#access-list 101 permit tcp 192.168.8.0 0.0.0.255 any eq 443
+
+
+#fh=open(r'C:\Python27\mine\network\showrun2800router.txt')
+fh=open(r'C:\Python27\mine\network\showrunswitch3750.txt')
+
+Regex = re.compile(r'''
+    access-list\s+(\d+)\s+(permit|remark|deny){1}(.*)
+    #(interface\s?)(Vlan|gigabitethernet|fastethernet)(\d+/?)+\s*
+    #ip\saddress\s+(\d+.\d+.\d+.\d+)\s*(\d+.\d+.\d+.\d+)?
+    ''',re.IGNORECASE | re.VERBOSE)
+
+result=Regex.findall(fh.read())
+dictmp={}
+dictmptot={}
+
+listtmp=[]
+cnt = 1
+if result:
+    for res in result:
+            #if res[3].startswith(args[0]):
+            print " acl find " + res[0] + res[1] + res[2]
+            #dictmp.setdefault('type','none')
+            
+            dictmp['aclno']=res[0]
+            dictmp['type']=res[1]
+            dictmp['aclcontent']=res[2]
+            listtmp.append(dictmp)
+            dictmp={}
+            print "lstttmp " + str(listtmp)
+    
+    for var in listtmp:
+        dictmptot.setdefault(var['aclno'],[])
+        dictmptot[var['aclno']]=dictmptot[var['aclno']] + [var]
+        #print 'dictmptot ' + str(dictmptot[var['aclno']])
+        print 'hasil '+  var['aclno'] + ' ' + var['type'] + ' ' + var['aclcontent']
+    #dictmptot[res[0]]=listtmp
+    for key,value in dictmptot.items():
+        
+        #print 'akhir dictmptot acl number '+key + 'isisny ' + value['type'] + ' ' + value['aclcontent'])
+        #print 'akhir dictmptot acl number '+key + 'isisny ' + str(value)
+        for val in value: 
+            print 'akhir detail  dictmptot acl number '+key + 'isisny ' + val['type'] + ' ' + val['aclcontent']
+        #
+            #dictmp1.setdefault(res[0],'none')
+            #dictmp1[res[0]]=dictmp1[res[0]] + [dictmp['type'],dictmp['aclcontent']]
+            #print dictmp1
+    #print 'listtmp ' + str(listtmp)
+    #print 'dictmptot ' + str(dictmptot)
+            #if cnt:
+            #    aclno = res[0]
+            #    cnt=0
+            #else:
+            #  aclno = res[0]
+            #   dictacl[res[0]]=lsttmptot
+            #   listtmptot=[]
+            #   listtmptot.append(listtmp)
+               
+            #print "listtmptot " + str(listtmptot)
+            
+svr='testkey'
+svr1='testkey'
+#server_detail=OrderedDict()
+server_detail={}
+server_detail.setdefault(svr,{})
+server_detail [svr]['systemPort']='e3/4'
+server_detail [svr]['switch_name']='swa1'
+server_detail.setdefault(svr1,{})
+server_detail [svr1]['systemPort']='e10/4'
+server_detail [svr1]['switch_name']='swa2'
+
+print server_detail
+
+dctt1={}
+L1 = ['permi','tcp any any']
+L2 = ['deny', 'ip any any']
+L=(L1,L2)
+print 'L ' + str(L)
+dctt1['105']=L
+print 'dict105 ' + str(dctt1)
+
+aL1={}
+aL2={}
+adctt1={}
+aL1['type']= 'permit'
+aL1['aclcontent']='tcp any any'
+aL2['type']='deny'
+aL2['aclcontent']= 'ip any any'
+L=(aL1,aL2)
+print 'L ' + str(L)
+dctt1['105']=L
+print 'dict105 ' + str(dctt1)
+
+fh=open(r'c:\python27\mine\network\showrun1800router.txt')
+print fh.read()
+fh.seek(0)
+Regex = re.compile(r'''
+    ip\s+inspect\s+name\s+(\w+)(.*)
+    ''',re.IGNORECASE | re.VERBOSE)
+
+result=Regex.findall(fh.read())
+print "Result " + str(result)
+dictmp={}
+dictmptot={}
+listtmp=[]
+if result:
+    for res in result:
+            #if res[3].startswith(args[0]):
+            print " ip insptec find " + res[0] + res[1]
+            #dictmp.setdefault('type','none')
+            
+            dictmp['inspect_name']=res[0]
+            dictmp['content']=res[1]
+            #dictmp['aclcontent']=res[2]
+            listtmp.append(dictmp)
+            dictmp={}
+            print "lstttmp " + str(listtmp)
+    
+    for var in listtmp:
+        dictmptot.setdefault(var['inspect_name'],[])
+        dictmptot[var['inspect_name']]=dictmptot[var['inspect_name']] + [var]
+        #print 'dictmptot ' + str(dictmptot[var['aclno']])
+        print 'hasil '+  var['inspect_name'] + ' ' + var['content']
+    #dictmptot[res[0]]=listtmp
+    for key,value in dictmptot.items():
+        
+        #print 'akhir dictmptot acl number '+key + 'isisny ' + value['type'] + ' ' + value['aclcontent'])
+        #print 'akhir dictmptot acl number '+key + 'isisny ' + str(value)
+        for val in value: 
+            print 'akhir detail  dictmptot inspect name '+key + ' isisny ' + val['content']
+            
+            
+
+a=[['10','20'],['30','40']]
+
+for i in a:
+    for ij in i:
+        print "ij is " + ij 
+    
+    
+line='''hostname fdaf    
+ftu       
+                  
+!
+kama
+!'''
+print re.escape('\n')
+Regex = re.compile(r'''
+hostname\s+(\w+)\s+(.*?)(\n\!\n)
+''',re.IGNORECASE | re.VERBOSE|re.DOTALL|re.MULTILINE)
+
+result=Regex.findall(line)
+print str(result)
